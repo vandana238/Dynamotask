@@ -1,0 +1,34 @@
+.LayoutContainer {
+  position: relative;
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  .Layout__Body {
+    position: relative;
+    min-height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    margin-right: auto;
+    margin-left: auto;
+    padding-left: 76px;
+    transition: padding-left 0.3s ease;
+    &.FullWidth {
+      padding-left: max(240px, 16%);
+    }
+    .Navbar__wrapper {
+      position: sticky;
+      top: 0;
+      width: 100%;
+    }
+    .Page__Wrapper {
+      padding: 1.5rem;
+      min-height: 100%;
+    }
+    .Footer__Wrapper{
+        margin-top: auto;
+        bottom: 0;
+        position: sticky;
+    }
+  }
+}

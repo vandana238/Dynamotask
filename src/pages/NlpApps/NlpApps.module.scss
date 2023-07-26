@@ -1,0 +1,36 @@
+.NlpApps__Container{
+    width: 100%;
+    .DescriptionWrapper{
+        display: flex;
+        width: 100%;
+        .TextDesc{
+            width: 90%;
+            .DescHeader{
+             
+            }
+            .DescText{
+                font-family: Open Sans,sans-serif!important;
+                font-size: 1.1rem !important;
+                 letter-spacing: 2px;
+                 line-height: 30px;
+                 display: 'flex';
+                 color: black;
+                 align-items: 'left';
+                 margin-left: 3%;
+
+            }
+           
+        }
+        .ChatBotImageWrapper{
+            width: 30%;
+            .ChatBotImage{
+                width: 60%;
+                object-fit: cover;
+                margin-left: 37%;
+                margin-top: 14%;
+            }
+
+        }
+
+    }
+}

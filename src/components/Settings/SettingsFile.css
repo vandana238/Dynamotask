@@ -1,0 +1,95 @@
+.ant-layout-content{
+  display: flex;
+}
+
+
+.settings-card {
+    margin-bottom: 24px;
+    padding: 0;
+  }
+  
+  .ant-row.ant-form-item.userStyle {
+    row-gap: 0px;
+  }
+  
+  .ant-col.ant-form-item-label {
+    text-align: left;
+  }
+  
+  .ant-col.ant-form-item-label > label {
+    font-weight: 700;
+  }
+  
+  .ant-input.ant-input-disabled {
+    background-color: #f5f5f5;
+    color: rgba(0, 0, 0, 0.65);
+    cursor: not-allowed;
+  }
+  
+  .addIntent .ant-input-1 {
+    width: 200px;
+    margin: 0 8px 8px 0;
+    font-feature-settings: "tnum", "tnum";
+    background-color: #fff;
+    background-image: none;
+    border: 1px solid #d9d9d9;
+    border-radius: 2px;
+    color: rgba(0, 0, 0, 0.85);
+    display: inline-block;
+    font-size: 14px;
+    font-variant: tabular-nums;
+    line-height: 1.5715;
+    list-style: none;
+    margin: 0;
+    min-width: 0;
+    padding: 4px 11px;
+    position: relative;
+    transition: all 0.3s;
+  }
+  
+  .addIntent .ant-btn {
+    background-color: #2368a0 !important;
+    width: 120px;
+    color: #fff !important;
+    margin-right: 8px;
+  }
+  
+  .addIntent.ant-input-2 {
+    width: 15vh;
+  }
+  
+  .listHeader-heading-1 {
+    font-weight: 600;
+    font-size: 1.25rem;
+  }
+  
+  .ant-breadcrumb {
+    font-size: 20px;
+    margin-top: 2vh;
+    margin-left: 5vh;
+  }
+  
+  .ant-layout-content .Formdata {
+    margin-top: -3vh;
+    margin-left: -4vw;
+  }
+/* icons.css */
+
+.ant-table-cell .svg-inline--fa {
+  color: blue;
+  cursor: pointer;
+  margin-left: 5px;
+}
+.label{
+  font-size: 1rem;
+    font-weight: 700;
+}
+
+
+
+
+.ant-layout-content .btnStyle .mr-2{
+color: #2368a0!important;
+}
+
+  

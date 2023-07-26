@@ -1,0 +1,22 @@
+.TopNavbarContainer {
+  position: sticky;
+  top: 0;
+  background-color: #363636;
+  display: flex;
+  justify-content: flex-end;
+  padding: 1rem;
+  .ProfileWrapper {
+    color: #fff;
+    cursor: pointer;
+    user-select: none;
+    .ProfileImageWrapper {
+      padding: 0.2rem;
+      border-radius: 50%;
+      background-color: #fff;
+      .Profile__Image {
+        width: 25px;
+        height: 25px;
+      }
+    }
+  }
+}

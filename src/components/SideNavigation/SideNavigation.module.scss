@@ -1,0 +1,125 @@
+.SideNavigationContainer{
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    height:100vh;
+    background-color: #363636;
+    padding: 0.5rem 0 2rem 0;
+    width: 76px;
+    z-index: 1001;
+    transition: width 0.3s ease;
+
+    &.Open {
+        width: max(240px, 16%);
+
+    }
+    .SideNavInner__Container{
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        justify-content: space-between;
+        user-select: none;
+        .TopContainer{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            .AppLogoWrapper{
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+            .NavOptions{
+                color: #fff;
+                display: flex;
+                flex-direction: column;
+                margin-top: 1rem;
+                .NavItem{
+                    display: flex;
+                    gap: 0.8rem;
+                    color: white;
+                    text-decoration: none;
+                    padding: 1rem 1.5rem;
+                    font-weight: 500;
+                    .Icon{
+                        size: 1.6rem;
+                    }
+                    .Text{
+                        white-space: nowrap;
+                        overflow: hidden;
+                    }
+                    &:hover{
+                        font-weight: bold;
+                        .Icon{
+                            size: 2rem;
+                            transition: transform 0.2s ease-in-out;
+                            transform: scale(1.2);
+                        }
+                    }
+                    &.Active{
+                        font-weight: bold;
+                        .Icon{
+                            size: 2rem;
+                            transition: transform 0.2s ease-in-out;
+                            transform: scale(1.2);
+                        }
+                    }
+                }
+                .RecentDivider{
+                    padding: 0 1.5rem;
+                    color: #fff;
+                    border-color: #fff;
+                    &.Close{
+                        padding: 0;
+                    }
+                }
+            }
+        }
+        .BottomContainer{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding-bottom: 1.5rem;
+            .BottomDivider{
+                padding: 0 1.5rem;
+                .RecentDivider{
+                    color: #fff;
+                    border-color: #fff;  
+                }
+                &.Close{
+                        padding: 0;
+                    }
+            }
+            .NavItem{
+                display: flex;
+                gap: 0.8rem;
+                color: white;
+                text-decoration: none;
+                padding: 1rem 1.5rem;
+                font-weight: 500;
+                .Icon{
+                    size: 1.6rem;
+                }
+                .Text{
+                    white-space: nowrap;
+                    overflow: hidden;
+                }
+                &:hover{
+                    font-weight: 600;
+                    .Icon{
+                        transition: transform 0.2s ease-in-out;
+                        transform: scale(1.2);
+                    }
+                }
+                &.Active{
+                    font-weight: bold;
+                    .Icon{
+                        size: 2rem;
+                        transition: transform 0.2s ease-in-out;
+                        transform: scale(1.2);
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,11 @@
+.AppFooter{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #363636;
+    padding: 0.5rem 2rem;
+    .FooterComment{
+        color: white;
+        user-select: none;
+    }
+}
