@@ -77,7 +77,7 @@ const SideNavigation = (props) => {
     let localarray=[]
     localarray.push(item.path)
     localStorage.setItem("BreadCrumbs",JSON.stringify(localarray))
-    alert(item.path)
+    // alert(item.path)
   })
 
   return (

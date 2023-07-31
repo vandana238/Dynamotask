@@ -1,16 +1,15 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleLeft } from "@fortawesome/free-solid-svg-icons";
-import { Card, Input, Button, Breadcrumb, List } from "antd";
-import { useLocation, useNavigate } from "react-router-dom";
-import { HomeOutlined, DeleteOutlined, EditOutlined } from "@ant-design/icons";
+import { Card, Input, Button, List } from "antd";
+import { useLocation, useNavigate } from "react-router-dom"; 
 import { faEdit, faTrash, faCheck } from '@fortawesome/free-solid-svg-icons';
 import "./IntentsFile.css";
 import Breadcrumbs from '../BreadCrumbss/Breadcrumbs';
 const { Search } = Input;
 
 const IntentsFile = (props) => {
-  const navigate = useNavigate();
+  const navigate = useNavigate(); 
   const location = useLocation();
   const myname = location.state?.cards?.data?.appname ?? "";
   const desc = location.state?.cards?.data?.description ?? "";
@@ -22,20 +21,6 @@ const IntentsFile = (props) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [sendvalues, setSendValues] = useState()
-  console.log(location.state, "checkvalues")
-  const sendprop = location.state
-  console.log(location.state, "Mycardscomponent")
-  const currentPath = window.location.pathname;
-  var sendingpaths = currentPath.split('/Intents')
-  if (myname) {
-
-  }
-  useEffect(() => {
-    console.log(sendingpaths, 'hellopath')
-    sendingpaths[sendingpaths.length - 1] = myname
-    setSendValues(sendingpaths)
-    console.log(sendingpaths, "hellopath")
-  }, [])
 
   useEffect(() => {
     const storedEntities = localStorage.getItem("Intents");
@@ -44,8 +29,19 @@ const IntentsFile = (props) => {
     }
   }, []);
 
+  useEffect(() => {
+    console.log(sendvalues, 'hellopath')
+    const currentPath = window.location.pathname;
+    var sendingpaths = currentPath.split('/')
+    if (myname) {
+      sendingpaths[sendingpaths.length - 1] = myname
+      setSendValues(sendingpaths)
+    }
+    console.log(sendingpaths, "hellopath")
+  }, [myname]);
+
   const handleIconClickBackField = () => {
-    navigate("/apps/:id");
+    // navigate.push("/apps/:id");
   };
 
   const handleAddEntity = () => {
@@ -85,9 +81,17 @@ const IntentsFile = (props) => {
     setSearchResults(filteredEntities);
   }, [Intents, searchQuery]);
 
+  // Function to navigate to another page when clicked
+  const handleNavigate = (item) => {
+    // Replace '/path-to-another-page' with the actual path to the desired page
+    // navigate(`/Sample/${item}`);
+    navigate('/Sample');
+
+  };
+
   return (
     <div className="ant-layout-content">
-      {/* <Breadcrumbs values={sendingpaths} /> */}
+      <Breadcrumbs  />
       <Card
         style={{
           marginTop: "4vh",
@@ -144,14 +148,12 @@ const IntentsFile = (props) => {
                 marginTop: "-4vh",
               }}
             >
-            <Search
+              <Search
                 placeholder="search for Intents"
                 enterButton
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
-                
-
             </p>
           </div>
         </div>
@@ -175,7 +177,7 @@ const IntentsFile = (props) => {
                   autoFocus
                 />
               ) : (
-                <span>{item}</span>
+                <span onClick={() => handleNavigate(item)}>{item}</span>
               )}
 
               <div>

@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import classes from "./NlpApps.module.scss";
-import  ChatBotImage from "../../chatbot.png";
-import { Layout, Avatar, Button, Modal, Card, Col, Row, Tabs, Input, Dropdown, Menu, Breadcrumb } from 'antd';
-import { HomeFilled, EllipsisOutlined, DownOutlined,SearchOutlined } from '@ant-design/icons';
+import ChatBotImage from "../../chatbot.png";
+import { Layout, Avatar, Button, Modal, Card, Col, Row, Tabs, Input, Dropdown, Menu } from 'antd';
+import { HomeFilled, EllipsisOutlined, DownOutlined, SearchOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 const { TabPane } = Tabs;
-const { Search } = Input;
 const { Header, Footer, Sider, Content } = Layout;
+const { Search } = Input;
+
 const NlpApps = () => {
   const navigate = useNavigate();
   const [appname, setAppname] = useState('');
@@ -18,12 +19,31 @@ const NlpApps = () => {
   const [selectedCard, setSelectedCard] = useState(null);
   const [filteredCards, setFilteredCards] = useState(cards);
   const currentPath = window.location.pathname;
-  var sendingpaths=currentPath.split('/')
+  var sendingpaths = currentPath.split('/')
+
+
+
+
   
+
   useEffect(() => {
     localStorage.setItem('cards', JSON.stringify(cards));
   }, [cards]);
+
+
+
+  useEffect(() => {
+    // Initialize "BreadCrumbs" in localStorage with an empty array if it doesn't exist
+    if (!localStorage.getItem("BreadCrumbs")) {
+      localStorage.setItem("BreadCrumbs", JSON.stringify([]));
+    }
+
+    // Save the cards data to localStorage whenever the 'cards' state changes
+    localStorage.setItem('cards', JSON.stringify(cards));
+  }, [cards]);
+
   const searchIconStyle = { color: '#2368a0' };
+
   const handleCreateCard = () => {
     const newCard = {
       id: Math.random().toString(),
@@ -36,7 +56,6 @@ const NlpApps = () => {
     setCards([...cards, newCard]);
     setAppname('');
     setDescription('');
-    console.log(newCard.createdOn);
   };
 
   const showModal = () => {
@@ -46,14 +65,25 @@ const NlpApps = () => {
   const handleOk = () => {
     setIsModalOpen(false);
     handleCreateCard();
-    setAppname('');
-    setDescription('');
   };
 
   const handleCancel = () => {
     setIsModalOpen(false);
   };
 
+  const hello = (cards) => {
+    var paths = []
+    var paths = (JSON.parse(localStorage.getItem("BreadCrumbs")))
+
+    paths.push(cards.data.appname)
+    localStorage.setItem("BreadCrumbs", JSON.stringify(paths))
+    let id = cards.id
+    navigate(`/apps/${id}`, {
+      state: {
+        cards,
+      },
+    });
+  };
   const handleSearch = (value) => {
     // Update the filteredCards state based on the search term
     const filteredApps = cards.filter(
@@ -61,24 +91,17 @@ const NlpApps = () => {
         card.data.appname.toLowerCase().includes(value.toLowerCase()) ||
         card.data.description.toLowerCase().includes(value.toLowerCase())
     );
-    setFilteredCards(filteredApps);
+    setFilteredCards(filteredApps); // Update filteredCards
   };
-  const hello = (cards) => {
-    console.log(cards.data.appname,"yyyyyyyyyyyyyyyy")
-   var paths=[]
-   var paths=(JSON.parse(localStorage.getItem("BreadCrumbs")))
-  
-   paths.push(cards.data.appname)
-   console.log(paths,"tttttttttttttttt")
-   localStorage.setItem("BreadCrumbs",JSON.stringify(paths))
-   let id=cards.id
-   console.log(id,"yyyyyyyyyyyyyyyy")
-    navigate(`/apps/${id}`, {
-      state: {
-        cards,
-      },
-    });
+
+  const saveCardsToLocalStorage = () => {
+    localStorage.setItem('cards', JSON.stringify(cards));
   };
+
+  useEffect(() => {
+    // Save the cards data to localStorage whenever the 'cards' state changes
+    saveCardsToLocalStorage();
+  }, [cards]);
 
   const items = [
     { key: '1', label: 'Export' },
@@ -122,6 +145,7 @@ const NlpApps = () => {
       ))}
     </Menu>
   );
+
   return (
     <div className={classes.NlpApps__Container}>
       <div className={classes.DescriptionWrapper}>
@@ -160,13 +184,12 @@ const NlpApps = () => {
         </Tabs>
         <p style={{ marginLeft: "995px", width: "20vw", marginTop: "-8vh" }}>
         <Input
-        placeholder="search for apps"
-        enterButton="Search"
-        onSearch={handleSearch}
-        suffix={<SearchOutlined style={searchIconStyle} />}
-      />
-
-      
+          placeholder="search for apps"
+          enterButton="Search"
+          onSearch={(value) => handleSearch(value)} // Use onSearch for search button click
+          onChange={(e) => handleSearch(e.target.value)} // Use onChange for real-time filtering
+          suffix={<SearchOutlined style={searchIconStyle} />}
+        />
         </p>
       </div>
       <div style={{ marginTop: '4vh' }}>

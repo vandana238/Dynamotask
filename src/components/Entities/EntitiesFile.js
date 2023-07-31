@@ -14,11 +14,15 @@ const EntitiesFile = (props) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [sendvalues, setSendValues] = useState()
-  console.log(location.state, "checkvalues")
+  const [Entites, setEntites] = useState([]);
+  const [entityInput, setEntityInput] = useState("");
+  const [editValue, setEditValue] = useState("");
+  const [editingIndex, setEditingIndex] = useState(-1);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
   const sendprop = location.state
   const myname = location.state && location.state.cards && location.state.cards.data.appname;
   const desc = location.state && location.state.cards && location.state.cards.data.description;
-  console.log(location.state, "Mycardscomponent")
   const currentPath = window.location.pathname;
   var sendingpaths = currentPath.split('/')
   if (myname) {
@@ -31,17 +35,12 @@ const EntitiesFile = (props) => {
     console.log(sendingpaths, "hellopath")
   }, [])
 
-  const [Entites, setEntites] = useState([]);
-  const [entityInput, setEntityInput] = useState("");
-  const [editValue, setEditValue] = useState("");
-  const [editingIndex, setEditingIndex] = useState(-1);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [searchResults, setSearchResults] = useState([]);
+
 
   useEffect(() => {
-    const storedEntities = localStorage.getItem("Entites");
-    if (storedEntities) {
-      setEntites(JSON.parse(storedEntities));
+    const storedIntents = localStorage.getItem("EntitesFile");
+    if (storedIntents) {
+      setEntites(JSON.parse(storedIntents));
     }
   }, []);
 
@@ -117,7 +116,7 @@ const EntitiesFile = (props) => {
               marginLeft: "30px",
             }}
           >
-            Vandhana - Entities
+            Hello - Entities
           </p>
         </div>
 

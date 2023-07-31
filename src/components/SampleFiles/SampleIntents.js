@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Input, Select, Button, Space, Tabs, Checkbox, List, Modal } from "antd";
+import { Input, Select, Button, Space, Tabs, Checkbox, List, Modal, Breadcrumb } from "antd";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleLeft, faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { Editor } from "react-draft-wysiwyg";
@@ -7,6 +7,8 @@ import { EditorState, convertToRaw } from 'draft-js';
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import './SampleIntents.scss';
 import { faMagic } from "@fortawesome/free-solid-svg-icons";
+import Breadcrumbs from '../BreadCrumbss/Breadcrumbs';
+
 
 const { TabPane } = Tabs;
 
@@ -20,6 +22,10 @@ const SampleIntents = () => {
   const [isMounted, setIsMounted] = useState(true);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [activeTab, setActiveTab] = useState('1');
+  const [selectedSentences, setSelectedSentences] = useState([]);
+  const [isGenerated, setIsGenerated] = useState(false);
+  const [question, setQuestion] = useState('');
+  const [generatedChoices, setGeneratedChoices] = useState([]);
   const [sentences, setSentences] = useState([
     "I want to book one ticket from Hyderabad to Detroit",
     "I want to book one ticket from Hyderabad to Chicago",
@@ -27,13 +33,83 @@ const SampleIntents = () => {
     "I want to book one ticket from Visakhapatnam to Chicago"
   ]);
 
-  const [selectedSentences, setSelectedSentences] = useState([]);
-  const [isGenerated, setIsGenerated] = useState(false);
 
-  const handleGenerateClick = () => {
-    setSelectedSentences([...sentences]);
-    setIsGenerated(true); // Set the state to true when sentences are generated
+  const options = {
+    source: ['Hyderabad', 'Visakhapatnam'],
+    dest: ['Detroit', 'Chicago'],
   };
+
+  // Function to generate sentences based on the entered example
+  const generateChoices = () => {
+    // Split the example by entities (<source/>, <dest/>)
+    const entityRegex = /<source\/>|<dest\/>/g;
+    const entities = example.match(entityRegex);
+
+    if (entities && entities.length === 2) {
+      // Replace entity tags with their corresponding options
+      let choices = [example];
+      entities.forEach((entity) => {
+        const entityName = entity === "<source/>" ? "source" : "dest";
+        const entityOptions = options[entityName] || [];
+        const newChoices = [];
+        choices.forEach((choice) => {
+          entityOptions.forEach((option) => {
+            newChoices.push(choice.replace(entity, option));
+          });
+        });
+        choices = newChoices;
+      });
+
+      setSentences(choices);
+      setIsGenerated(true); // Set the state to true when sentences are generated
+    } else {
+      setSentences([]);
+      setIsGenerated(false);
+    }
+  };
+
+  // Function to handle the "Generate" button click for Utterance Generator
+  const handleGenerateClick = () => {
+    const regex = /I want to book one ticket from <source\/> \(([^:]+:[^|]+\|[^:]+:[^)]+)\) <source\/> to <dest\/> \(([^:]+:[^|]+\|[^:]+:[^)]+)\) <dest\/>$/;
+
+    // Check if the entered question matches the format
+    if (regex.test(question)) {
+      // If the question matches, generate the sentences
+      alert("hellosdwefwergfrf")
+      const entityRegex = /<source\/>|<dest\/>/g;
+      const entities = question.match(entityRegex);
+
+      if (entities && entities.length === 2) {
+        let choices = [question];
+        entities.forEach((entity) => {
+          const entityName = entity === "<source/>" ? "source" : "dest";
+          const entityOptions = options[entityName] || [];
+          const newChoices = [];
+          choices.forEach((choice) => {
+            entityOptions.forEach((option) => {
+              newChoices.push(choice.replace(entity, option));
+            });
+          });
+          choices = newChoices;
+        });
+
+        setSentences(choices);
+        setIsGenerated(true); // Set the state to true when sentences are generated
+      } else {
+        setSentences([]);
+        setIsGenerated(false);
+      }
+    } else {
+      setSentences([]); // Reset the sentences state if the question doesn't match the format
+      setIsGenerated(false);
+    }
+  };
+
+  const handleQuestionChange = (e) => {
+    setQuestion(e.target.value);
+    generateChoices();// Call the function to generate sentences based on the entered question
+  };
+  
 
   const handleCheckboxChange = (sentence) => {
     setSelectedSentences((prevSelected) =>
@@ -97,7 +173,7 @@ const SampleIntents = () => {
 
   const handleEditSampleIntents = (index) => {
     setEditingIndex(index);
-    setEditValue(examplesList[index]); // Set the initial value for editing
+    setEditValue(examplesList[index]);
   };
   
   const handleUpdateSampleIntents = (index) => {
@@ -140,11 +216,13 @@ const SampleIntents = () => {
     { value: 'usa', label: 'United States' },
     { value: 'can', label: 'Canada' },
     { value: 'uk', label: 'United Kingdom' },
-    // ... Add more options if needed
+    { value: 'pr', label: 'paris' },
+    { value: 'lo', label: 'London' },
   ];
 
   return (
     <div className="ant-layout-content-1">
+      <Breadcrumbs  />
       <div className="ant-card-body-1">
         <div className="ant-card-body-2">
           <div className='top1'>
@@ -163,7 +241,7 @@ const SampleIntents = () => {
                 marginLeft: "10px",
               }}
             >
-              Vandhana -Settings
+              Hello -Intents
             </p>
           </div>
           <p style={{ fontWeight: "bolder", fontSize: "1.2rem", marginTop: "-30px", marginLeft: "3px" }}>Utterances</p>
@@ -201,13 +279,13 @@ const SampleIntents = () => {
           <FontAwesomeIcon
             icon={faEdit}
             style={{ color: 'green', fontSize: '15px', marginLeft: '8px', cursor: 'pointer' }}
-            onClick={() => handleUpdateSampleIntents(index)} // Update when the user clicks the edit icon again
+            onClick={() => handleUpdateSampleIntents(index)} 
           />
         ) : (
           <FontAwesomeIcon
             icon={faEdit}
             style={{ color: '#00aae7', fontSize: '15px', marginLeft: '8px', cursor: 'pointer' }}
-            onClick={() => handleEditSampleIntents(index)} // Enter edit mode
+            onClick={() => handleEditSampleIntents(index)} 
           />
         )}
         <FontAwesomeIcon
@@ -298,9 +376,14 @@ const SampleIntents = () => {
                 <p style={{ color: '#666' }}>Note: Please add a phrase and select a language to generate possible utterances.</p>
               </TabPane>
               <TabPane tab="Utterance Generator" key="2">
-              <div style={{ marginBottom: '8px', display: 'flex', alignItems: 'center' }}>
-                  <span style={{ marginRight: '18px', fontWeight: 'bold' }}>Example</span>
-                  <Input placeholder="Basic usage" style={{ width: '30%', marginRight: '18px',height:"30%",borderRadius:"unset" }} />
+        <div style={{ marginBottom: '8px', display: 'flex', alignItems: 'center' }}>
+          <span style={{ marginRight: '18px', fontWeight: 'bold' }}>Example</span>
+          <Input
+            placeholder="Basic usage"
+            style={{ width: '30%', marginRight: '18px', height: '30%', borderRadius: 'unset' }}
+            value={question}
+            onChange={handleQuestionChange}
+          />
                   <span style={{ marginRight: '18px', fontWeight: 'bold' }}>Language</span>
                   <Select
                     style={{ width: "25%", marginRight: '18px',color: "#bfbfbf",borderRadius:"unset" }}
@@ -308,47 +391,47 @@ const SampleIntents = () => {
                     options={countryOptions}
                   />
                   <Space>
-                    <Button
-                      type="primary"
-                      style={{
-                        backgroundColor: '#2368a0',
-                        color: '#fff',
-                        borderRadius: '2px',
-                        fontSize: '16px',
-                        height: '40px',
-                        padding: '6.4px 15px',
-                      }}
-                      onClick={handleGenerateClick}
-                    >
-                      Generate
-                    </Button>
+                  <Button
+  type="primary"
+  style={{
+    backgroundColor: '#2368a0',
+    color: '#fff',
+    borderRadius: '2px',
+    fontSize: '16px',
+    height: '40px',
+    padding: '6.4px 15px',
+  }}
+  onClick={handleGenerateClick} >Generate</Button>
+
                   </Space>
                 </div>
                 {isGenerated && (
-                  <div>
-                    <p style={{ color: '#black', fontWeight: 'bold', marginBottom: '8px' }}>
-                      Syntax: text &lt;entityname&gt; (value1:normalization1|value2:normalization2) &lt;entityname&gt; text2
-                    </p>
-                    <p style={{ color: '#black', fontWeight: 'bold', marginBottom: '8px' }}>
-                      Example: I want to book one ticket from &lt;source/&gt; (Hyderabad:hyd|Visakhapatnam:vskp) &lt;source/&gt; to &lt;dest/&gt; (Detroit:dtx|Chicago:ch) &lt;dest/&gt;
-                    </p>
+              <div>
+                <p style={{ color: '#000', fontWeight: 'bold', marginBottom: '8px' }}>
+                  Syntax: text &lt;entityname&gt; (value1:normalization1|value2:normalization2) &lt;entityname&gt; text2
+                </p>
+                <p style={{ color: '#000', fontWeight: 'bold', marginBottom: '8px' }}>
+                  Example: I want to book one ticket from &lt;source/&gt; (Hyderabad:hyd|Visakhapatnam:vskp) &lt;source/&gt; to
+                  &lt;dest/&gt; (Detroit:dtx|Chicago:ch) &lt;dest/&gt;
+                </p>
 
-                    <div style={{ marginBottom: "8px" }}>
-                      <Checkbox onClick={handleSelectAll}>Select All</Checkbox>
-                    </div>
+                <div style={{ marginBottom: '8px' }}>
+                  <Checkbox onClick={handleSelectAll}>Select All</Checkbox>
+                </div>
 
-                    {selectedSentences.map((sentence, index) => (
-                      <div key={index} style={{ display: "flex", alignItems: "center" }}>
-                        <Checkbox
-                          checked={false}
-                        />
-                        <span style={{ marginLeft: "8px" }}>{sentence}</span>
-                      </div>
-                    ))}
+                {sentences.map((sentence, index) => (
+                  <div key={index} style={{ display: 'flex', alignItems: 'center' }}>
+                    <Checkbox
+                      checked={selectedSentences.includes(sentence)}
+                      onChange={() => handleCheckboxChange(sentence)}
+                    />
+                    <span style={{ marginLeft: '8px' }}>{sentence}</span>
                   </div>
-                )}
-              </TabPane>
-            </Tabs>
+                ))}
+              </div>
+            )}
+          </TabPane>
+        </Tabs>
             <div style={{ textAlign: 'right' }}>
               <Button onClick={handleModalCancel} style={{
                   width: '81.59px',

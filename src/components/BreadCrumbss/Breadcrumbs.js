@@ -5,26 +5,26 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 const Breadcrumbs = (props) => {
   const navigate = useNavigate()
   let routepath=useLocation()
-  const [paths, setPaths] = useState(props.values)
+  const [paths, setPaths] = useState(routepath.pathname)
   const [localpaths,setlocalpaths]=useState(JSON.parse(localStorage.getItem("BreadCrumbs")))
   console.log(paths)
 
-  // console.log(routepath, "routepath")
+  console.log((routepath.pathname), "routepath")
   // console.log(routepath.state,"statedataprovidedddddd")
   // console.log(routepath.state.cards.data.appname, "vcards datata enterede")
 
   // let valueofbreadcrumbs = routepath.state.cards.data.appname;
 
-
-
   function fun(index) {
-alert(index)
-    var test=props.values.splice(index)
-    const myString = test.join(",");
-console.log(myString);
-var finalpaths=myString.replace(',','/')
-alert(finalpaths)
-    navigate(`${finalpaths}`);
+    var temp=paths.split("/")
+    var arr=temp.splice(0,index+2)
+    const result = arr.join('/');
+
+var temp=JSON.parse(localStorage.getItem("BreadCrumbs"))
+temp.pop()
+localStorage.setItem('BreadCrumbs', JSON.stringify(temp));
+
+    navigate(`${result}`);
   }
   return (<>
     <div className='breadCrumbSection' style={{ margin: "20px", color: "#8c8c8c", marginTop: "-6px" }}>

@@ -21,20 +21,22 @@ const Mycards = (props) => {
   var sendingpaths = currentPath.split('/')
 
   useEffect(() => {
-    console.log(sendingpaths, 'hellopath')
     sendingpaths[sendingpaths.length - 1] = myname
     setSendValues(sendingpaths)
-    console.log(sendingpaths, "hellopath")
   }, [])
 
-
+console.log(myname,"mynamedatatatatatatat")
 
   const handleIconClickBack = () => {
     navigate("/");
   };
 
   const Follow = () => {
-    navigate('//apps/:id/IntentsFile', {
+    var arr=JSON.parse(localStorage.getItem("BreadCrumbs"))
+    arr.push("IntentsFile")
+    alert(arr)
+    localStorage.setItem("BreadCrumbs",JSON.stringify(arr))
+    navigate('IntentsFile', {
       state: {
         sendingpaths
       },
@@ -42,14 +44,24 @@ const Mycards = (props) => {
   }
 
   const FollowEntites = () => {
-    navigate("/EntitiesFile", {
+    var arr=JSON.parse(localStorage.getItem("BreadCrumbs"))
+    arr.push("EntitiesFile")
+    alert(arr)
+    localStorage.setItem("BreadCrumbs",JSON.stringify(arr))
+    navigate('EntitiesFile', {
       state: {
         sendingpaths
       },
     })
   }
+
+  
   const FollowSettings = () => {
-    navigate("/SettingsFile", {
+    var arr=JSON.parse(localStorage.getItem("BreadCrumbs"))
+    arr.push("SettingsFile")
+    alert(arr)
+    localStorage.setItem("BreadCrumbs",JSON.stringify(arr))
+    navigate('SettingsFile', {
       state: {
         sendingpaths
       },
@@ -58,7 +70,7 @@ const Mycards = (props) => {
 
   return (
     <div style={{ margin: '10px', marginTop: "-30px" }}>
-      <Breadcrumbs   values={sendingpaths} />
+      <Breadcrumbs/>
       <Card
         style={{
           marginTop: '1vh',
@@ -77,8 +89,10 @@ const Mycards = (props) => {
             style={{ color: '#2368a0', fontSize: '1.8rem' }}
             onClick={handleIconClickBack}
           />
-          <p style={{ color: " #2368a0", fontSize: "1.8rem", fontWeight: "700", marginTop: "-43px", marginLeft: "30px" }}>{myname}</p>
-          <p style={{ fontSize: "1.1rem", marginLeft: "32px", marginTop: "-30px" }}>{desc}</p>
+          <p style={{ color: " #2368a0", fontSize: "1.8rem", fontWeight: "700", marginTop: "-43px", marginLeft: "30px" }}>Hello</p>
+          {/* <p>{myname} {desc}</p> */}
+          
+          <p style={{ fontSize: "1.1rem", marginLeft: "32px", marginTop: "-30px" }}>Hello</p>
 
         </div>
         <div style={{ marginTop: "50px" }}>
