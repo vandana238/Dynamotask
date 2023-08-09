@@ -110,5 +110,12 @@
     width: 700px;
 
    }
+   .sentence-container {
+    flex: 1; /* Expand to fill available space */
+    display: flex;
+    align-items: center;
+    padding-left: 8px; /* Add some space between checkbox and sentence */
+  }
+  
 
   

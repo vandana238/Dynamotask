@@ -8,6 +8,8 @@ import IntentsFile from './components/Intents/IntentsFile';
 import SettingsFile from './components/Settings/SettingsFile';
 import SampleIntents from './components/SampleFiles/SampleIntents';
 import Breadcrumbs from './components/BreadCrumbss/Breadcrumbs';
+import FlowFile from './components/Flow/FlowFile';
+import PracticeFile from './components/practice/PractileFile';
 
 function App() {
   
@@ -24,6 +26,11 @@ function App() {
           <Route path='apps/:id/EntitiesFile' element={<EntitiesFile/>}/>
           <Route path='apps/:id/SettingsFile' element={<SettingsFile/>}/>
           <Route path='/Sample' element={<SampleIntents/>}/>
+          <Route path='/FlowFile' element={<FlowFile/>}/>
+          <Route path='/PracticeFile' element={<PracticeFile/>}/>
+
+
+
 
 
 

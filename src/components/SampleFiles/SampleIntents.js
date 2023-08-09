@@ -1,18 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { Input, Select, Button, Space, Tabs, Checkbox, List, Modal, Breadcrumb } from "antd";
+import { Input, Select, Button, Space, Tabs, Checkbox, List, Modal } from "antd";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faAngleLeft, faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faAngleLeft, faEdit, faTrash, faMagic } from '@fortawesome/free-solid-svg-icons';
 import { Editor } from "react-draft-wysiwyg";
 import { EditorState, convertToRaw } from 'draft-js';
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import './SampleIntents.scss';
-import { faMagic } from "@fortawesome/free-solid-svg-icons";
 import Breadcrumbs from '../BreadCrumbss/Breadcrumbs';
+import { Tooltip } from 'antd';
 
 
 const { TabPane } = Tabs;
 
 const SampleIntents = () => {
+  // State variables
   const [example, setExample] = useState('');
   const [examplesList, setExamplesList] = useState([]);
   const [editingIndex, setEditingIndex] = useState(-1);
@@ -23,22 +24,192 @@ const SampleIntents = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [activeTab, setActiveTab] = useState('1');
   const [selectedSentences, setSelectedSentences] = useState([]);
-  const [isGenerated, setIsGenerated] = useState(false);
   const [question, setQuestion] = useState('');
+  const [isGenerated, setIsGenerated] = useState(false);
   const [generatedChoices, setGeneratedChoices] = useState([]);
-  const [sentences, setSentences] = useState([
-    "I want to book one ticket from Hyderabad to Detroit",
-    "I want to book one ticket from Hyderabad to Chicago",
-    "I want to book one ticket from Visakhapatnam to Detroit",
-    "I want to book one ticket from Visakhapatnam to Chicago"
-  ]);
+ const [sentences, setSentences] = useState([]);
+  // const [sentences, setSentences] = useState([]);
+
+const Responsedata=[
+  {
+      "text": "I want to book one ticket from Hyderabad to Detroit",
+      "entities": [
+          {
+              "entity": {
+                  "Id": null,
+                  "Name": "source"
+              },
+              "normalization": {
+                  "Id": null,
+                  "Name": "hyd"
+              },
+              "synonms": {
+                  "Id": null,
+                  "Value": "Hyderabad"
+              },
+              "startPos": 31,
+              "endPos": 40
+          },
+          {
+              "entity": {
+                  "Id": null,
+                  "Name": "dest"
+              },
+              "normalization": {
+                  "Id": null,
+                  "Name": "dtx"
+              },
+              "synonms": {
+                  "Id": null,
+                  "Value": "Detroit"
+              },
+              "startPos": 44,
+              "endPos": 51
+          }
+      ],
+      "language": {
+          "Id": "31A18135-21D8-4BE8-8993-372F179E144C",
+          "Name": "English"
+      }
+  },
+  {
+      "text": "I want to book one ticket from Hyderabad to Chicago",
+      "entities": [
+          {
+              "entity": {
+                  "Id": null,
+                  "Name": "source"
+              },
+              "normalization": {
+                  "Id": null,
+                  "Name": "hyd"
+              },
+              "synonms": {
+                  "Id": null,
+                  "Value": "Hyderabad"
+              },
+              "startPos": 31,
+              "endPos": 40
+          },
+          {
+              "entity": {
+                  "Id": null,
+                  "Name": "dest"
+              },
+              "normalization": {
+                  "Id": null,
+                  "Name": "ch"
+              },
+              "synonms": {
+                  "Id": null,
+                  "Value": "Chicago"
+              },
+              "startPos": 44,
+              "endPos": 51
+          }
+      ],
+      "language": {
+          "Id": "31A18135-21D8-4BE8-8993-372F179E144C",
+          "Name": "English"
+      }
+  },
+  {
+      "text": "I want to book one ticket from Visakhapatnam to Detroit",
+      "entities": [
+          {
+              "entity": {
+                  "Id": null,
+                  "Name": "source"
+              },
+              "normalization": {
+                  "Id": null,
+                  "Name": "vskp"
+              },
+              "synonms": {
+                  "Id": null,
+                  "Value": "Visakhapatnam"
+              },
+              "startPos": 31,
+              "endPos": 44
+          },
+          {
+              "entity": {
+                  "Id": null,
+                  "Name": "dest"
+              },
+              "normalization": {
+                  "Id": null,
+                  "Name": "dtx"
+              },
+              "synonms": {
+                  "Id": null,
+                  "Value": "Detroit"
+              },
+              "startPos": 48,
+              "endPos": 55
+          }
+      ],
+      "language": {
+          "Id": "31A18135-21D8-4BE8-8993-372F179E144C",
+          "Name": "English"
+      }
+  },
+  {
+      "text": "I want to book one ticket from Visakhapatnam to Chicago",
+      "entities": [
+          {
+              "entity": {
+                  "Id": null,
+                  "Name": "source"
+              },
+              "normalization": {
+                  "Id": null,
+                  "Name": "vskp"
+              },
+              "synonms": {
+                  "Id": null,
+                  "Value": "Visakhapatnam"
+              },
+              "startPos": 31,
+              "endPos": 44
+          },
+          {
+              "entity": {
+                  "Id": null,
+                  "Name": "dest"
+              },
+              "normalization": {
+                  "Id": null,
+                  "Name": "ch"
+              },
+              "synonms": {
+                  "Id": null,
+                  "Value": "Chicago"
+              },
+              "startPos": 48,
+              "endPos": 55
+          }
+      ],
+      "language": {
+          "Id": "31A18135-21D8-4BE8-8993-372F179E144C",
+          "Name": "English"
+      }
+  }
+]
 
 
   const options = {
     source: ['Hyderabad', 'Visakhapatnam'],
     dest: ['Detroit', 'Chicago'],
   };
-
+  const handleSelectAll = () => {
+    if (selectedSentences.length === sentences.length) {
+      setSelectedSentences([]); // Deselect all if all sentences are selected
+    } else {
+      setSelectedSentences(sentences); // Select all sentences
+    }
+  };
+  
   // Function to generate sentences based on the entered example
   const generateChoices = () => {
     // Split the example by entities (<source/>, <dest/>)
@@ -69,59 +240,46 @@ const SampleIntents = () => {
   };
 
   // Function to handle the "Generate" button click for Utterance Generator
+  const handleQuestionChange = (e) => {
+    const value = e.target.value;
+    console.log('Question input:', value); // Debugging: Check the input value
+    setQuestion(value);
+  };
+
+ 
+
   const handleGenerateClick = () => {
-    const regex = /I want to book one ticket from <source\/> \(([^:]+:[^|]+\|[^:]+:[^)]+)\) <source\/> to <dest\/> \(([^:]+:[^|]+\|[^:]+:[^)]+)\) <dest\/>$/;
+    const regex = /^I want to book one ticket from\s+(.*?)\s+to\s+(.*?)$/i;
+    const matches = question.match(regex);
 
-    // Check if the entered question matches the format
-    if (regex.test(question)) {
-      // If the question matches, generate the sentences
-      alert("hellosdwefwergfrf")
-      const entityRegex = /<source\/>|<dest\/>/g;
-      const entities = question.match(entityRegex);
+    if (matches) {
+      const source = matches[1].trim();
+      const dest = matches[2].trim();
 
-      if (entities && entities.length === 2) {
-        let choices = [question];
-        entities.forEach((entity) => {
-          const entityName = entity === "<source/>" ? "source" : "dest";
-          const entityOptions = options[entityName] || [];
-          const newChoices = [];
-          choices.forEach((choice) => {
-            entityOptions.forEach((option) => {
-              newChoices.push(choice.replace(entity, option));
-            });
-          });
-          choices = newChoices;
+      const generatedSentences = [];
+      options.source.forEach((sourceOption) => {
+        options.dest.forEach((destOption) => {
+          const sentence = `I want to book one ticket from ${sourceOption} to ${destOption}`;
+          generatedSentences.push(sentence);
         });
+      });
 
-        setSentences(choices);
-        setIsGenerated(true); // Set the state to true when sentences are generated
-      } else {
-        setSentences([]);
-        setIsGenerated(false);
-      }
+      setSentences(generatedSentences);
+      setIsGenerated(true);
     } else {
-      setSentences([]); // Reset the sentences state if the question doesn't match the format
+      console.log('Invalid question format');
+      setSentences([]);
       setIsGenerated(false);
     }
   };
-
-  const handleQuestionChange = (e) => {
-    setQuestion(e.target.value);
-    generateChoices();// Call the function to generate sentences based on the entered question
+  const handleCheckboxChange = (sentence) => {
+    if (selectedSentences.includes(sentence)) {
+      setSelectedSentences((prevSelected) => prevSelected.filter((item) => item !== sentence));
+    } else {
+      setSelectedSentences((prevSelected) => [...prevSelected, sentence]);
+    }
   };
   
-
-  const handleCheckboxChange = (sentence) => {
-    setSelectedSentences((prevSelected) =>
-      prevSelected.includes(sentence)
-        ? prevSelected.filter((item) => item !== sentence)
-        : [...prevSelected, sentence]
-    );
-  };
-
-  const handleSelectAll = () => {
-    setSelectedSentences(sentences);
-  };
 
   const customStyleMap = {
     smallFont: {
@@ -376,61 +534,99 @@ const SampleIntents = () => {
                 <p style={{ color: '#666' }}>Note: Please add a phrase and select a language to generate possible utterances.</p>
               </TabPane>
               <TabPane tab="Utterance Generator" key="2">
-        <div style={{ marginBottom: '8px', display: 'flex', alignItems: 'center' }}>
-          <span style={{ marginRight: '18px', fontWeight: 'bold' }}>Example</span>
-          <Input
-            placeholder="Basic usage"
-            style={{ width: '30%', marginRight: '18px', height: '30%', borderRadius: 'unset' }}
-            value={question}
-            onChange={handleQuestionChange}
-          />
-                  <span style={{ marginRight: '18px', fontWeight: 'bold' }}>Language</span>
-                  <Select
-                    style={{ width: "25%", marginRight: '18px',color: "#bfbfbf",borderRadius:"unset" }}
-                    onChange={handleChangeValue}
-                    options={countryOptions}
+  <div style={{ marginBottom: '8px' }}>
+    <div style={{ display: 'flex', alignItems: 'center', marginBottom: '8px' }}>
+      <span style={{ marginRight: '18px', fontWeight: 'bold' }}>Example</span>
+      <Input
+        placeholder="Basic usage"
+        style={{ width: '30%', marginRight: '18px', borderRadius: 'unset' }}
+        value={question}
+        onChange={handleQuestionChange}
+      />
+      <span style={{ marginRight: '18px', fontWeight: 'bold' }}>Language</span>
+      <Select
+        style={{ width: '25%', marginRight: '18px', color: '#bfbfbf', borderRadius: 'unset' }}
+        onChange={handleChangeValue}
+        options={countryOptions}
+      />
+      <Button
+        type="primary"
+        style={{
+          backgroundColor: '#2368a0',
+          color: '#fff',
+          borderRadius: '2px',
+          fontSize: '16px',
+          height: '40px',
+          padding: '6.4px 15px',
+        }}
+        onClick={handleGenerateClick}
+      >
+        Generate
+      </Button>
+    </div>
+    {isGenerated && (
+      <div>
+        <label className="ant-checkbox-wrapper ml-0 mb-2">
+          <span className="ant-checkbox">
+            <input
+              type="checkbox"
+              className="ant-checkbox-input"
+              onChange={() => handleSelectAll()}
+              style={{marginBottom:"20px"}}
+            />
+          </span>
+          Select All
+        </label>
+        <div className="ant-list"  >
+          {Responsedata.map((item, index) => (
+            <div
+              key={index}
+              className="ant-list-item ml-0 d-flex align-items-center justify-content-between"
+              
+            >
+              <label className="ant-checkbox-wrapper mr-4">
+                <span className="ant-checkbox" >
+                  <input
+                    type="checkbox"
+                    className="ant-checkbox-input"
+                    value=""
+                    checked={selectedSentences.includes(item.text)}
+                    onChange={() => handleCheckboxChange(item.text)}
+                    
                   />
-                  <Space>
-                  <Button
-  type="primary"
-  style={{
-    backgroundColor: '#2368a0',
-    color: '#fff',
-    borderRadius: '2px',
-    fontSize: '16px',
-    height: '40px',
-    padding: '6.4px 15px',
-  }}
-  onClick={handleGenerateClick} >Generate</Button>
-
-                  </Space>
-                </div>
-                {isGenerated && (
-              <div>
-                <p style={{ color: '#000', fontWeight: 'bold', marginBottom: '8px' }}>
-                  Syntax: text &lt;entityname&gt; (value1:normalization1|value2:normalization2) &lt;entityname&gt; text2
-                </p>
-                <p style={{ color: '#000', fontWeight: 'bold', marginBottom: '8px' }}>
-                  Example: I want to book one ticket from &lt;source/&gt; (Hyderabad:hyd|Visakhapatnam:vskp) &lt;source/&gt; to
-                  &lt;dest/&gt; (Detroit:dtx|Chicago:ch) &lt;dest/&gt;
-                </p>
-
-                <div style={{ marginBottom: '8px' }}>
-                  <Checkbox onClick={handleSelectAll}>Select All</Checkbox>
-                </div>
-
-                {sentences.map((sentence, index) => (
-                  <div key={index} style={{ display: 'flex', alignItems: 'center' }}>
-                    <Checkbox
-                      checked={selectedSentences.includes(sentence)}
-                      onChange={() => handleCheckboxChange(sentence)}
-                    />
-                    <span style={{ marginLeft: '8px' }}>{sentence}</span>
+                </span>
+              </label>
+              <span>
+                <div style={{marginLeft: "25px", marginTop: "-25px", marginBottom: "15px"}}>
+                {item.text.substring(0, item.entities[0].startPos)}
+                <Tooltip title={(
+                  <div>
+                    <div><strong>Entity:</strong> {item.entities[0].entity.Name}</div>
+                    <div><strong>Normalization:</strong> {item.entities[0].normalization.Name}</div>
                   </div>
-                ))}
+                )}>
+                  <span className="blue-text">{item.entities[0].synonms.Value}</span>
+                </Tooltip>
+                {item.text.substring(item.entities[0].endPos, item.entities[1].startPos)}
+                <Tooltip title={(
+                  <div>
+                    <div><strong>Entity:</strong> {item.entities[1].entity.Name}</div>
+                    <div><strong>Normalization:</strong> {item.entities[1].normalization.Name}</div>
+                  </div>
+                )}>
+                  <span className="blue-text">{item.entities[1].synonms.Value}</span>
+                </Tooltip>
+                {item.text.substring(item.entities[1].endPos)}
               </div>
-            )}
-          </TabPane>
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
+    )}
+  </div>
+</TabPane>
+
         </Tabs>
             <div style={{ textAlign: 'right' }}>
               <Button onClick={handleModalCancel} style={{
