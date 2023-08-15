@@ -8,11 +8,180 @@ import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import './SampleIntents.scss';
 import Breadcrumbs from '../BreadCrumbss/Breadcrumbs';
 import { Tooltip } from 'antd';
+import { useLocation, useNavigate } from "react-router-dom";
+
 
 
 const { TabPane } = Tabs;
 
-const SampleIntents = () => {
+const SampleIntents = (props) => {
+   const Responsedata = [
+    {
+      "text": "I want to book one ticket from Hyderabad to Detroit",
+      "entities": [
+        {
+          "entity": {
+            "Id": null,
+            "Name": "source"
+          },
+          "normalization": {
+            "Id": null,
+            "Name": "hyd"
+          },
+          "synonms": {
+            "Id": null,
+            "Value": "Hyderabad"
+          },
+          "startPos": 31,
+          "endPos": 40
+        },
+        {
+          "entity": {
+            "Id": null,
+            "Name": "dest"
+          },
+          "normalization": {
+            "Id": null,
+            "Name": "dtx"
+          },
+          "synonms": {
+            "Id": null,
+            "Value": "Detroit"
+          },
+          "startPos": 44,
+          "endPos": 51
+        }
+      ],
+      "language": {
+        "Id": "31A18135-21D8-4BE8-8993-372F179E144C",
+        "Name": "English"
+      }
+    },
+    {
+      "text": "I want to book one ticket from Hyderabad to Chicago",
+      "entities": [
+        {
+          "entity": {
+            "Id": null,
+            "Name": "source"
+          },
+          "normalization": {
+            "Id": null,
+            "Name": "hyd"
+          },
+          "synonms": {
+            "Id": null,
+            "Value": "Hyderabad"
+          },
+          "startPos": 31,
+          "endPos": 40
+        },
+        {
+          "entity": {
+            "Id": null,
+            "Name": "dest"
+          },
+          "normalization": {
+            "Id": null,
+            "Name": "ch"
+          },
+          "synonms": {
+            "Id": null,
+            "Value": "Chicago"
+          },
+          "startPos": 44,
+          "endPos": 51
+        }
+      ],
+      "language": {
+        "Id": "31A18135-21D8-4BE8-8993-372F179E144C",
+        "Name": "English"
+      }
+    },
+    {
+      "text": "I want to book one ticket from Visakhapatnam to Detroit",
+      "entities": [
+        {
+          "entity": {
+            "Id": null,
+            "Name": "source"
+          },
+          "normalization": {
+            "Id": null,
+            "Name": "vskp"
+          },
+          "synonms": {
+            "Id": null,
+            "Value": "Visakhapatnam"
+          },
+          "startPos": 31,
+          "endPos": 44
+        },
+        {
+          "entity": {
+            "Id": null,
+            "Name": "dest"
+          },
+          "normalization": {
+            "Id": null,
+            "Name": "dtx"
+          },
+          "synonms": {
+            "Id": null,
+            "Value": "Detroit"
+          },
+          "startPos": 48,
+          "endPos": 55
+        }
+      ],
+      "language": {
+        "Id": "31A18135-21D8-4BE8-8993-372F179E144C",
+        "Name": "English"
+      }
+    },
+    {
+      "text": "I want to book one ticket from Visakhapatnam to Chicago",
+      "entities": [
+        {
+          "entity": {
+            "Id": null,
+            "Name": "source"
+          },
+          "normalization": {
+            "Id": null,
+            "Name": "vskp"
+          },
+          "synonms": {
+            "Id": null,
+            "Value": "Visakhapatnam"
+          },
+          "startPos": 31,
+          "endPos": 44
+        },
+        {
+          "entity": {
+            "Id": null,
+            "Name": "dest"
+          },
+          "normalization": {
+            "Id": null,
+            "Name": "ch"
+          },
+          "synonms": {
+            "Id": null,
+            "Value": "Chicago"
+          },
+          "startPos": 48,
+          "endPos": 55
+        }
+      ],
+      "language": {
+        "Id": "31A18135-21D8-4BE8-8993-372F179E144C",
+        "Name": "English"
+      }
+    }
+  ]
+
   // State variables
   const [example, setExample] = useState('');
   const [examplesList, setExamplesList] = useState([]);
@@ -27,177 +196,40 @@ const SampleIntents = () => {
   const [question, setQuestion] = useState('');
   const [isGenerated, setIsGenerated] = useState(false);
   const [generatedChoices, setGeneratedChoices] = useState([]);
- const [sentences, setSentences] = useState([]);
-  // const [sentences, setSentences] = useState([]);
-
-const Responsedata=[
-  {
-      "text": "I want to book one ticket from Hyderabad to Detroit",
-      "entities": [
-          {
-              "entity": {
-                  "Id": null,
-                  "Name": "source"
-              },
-              "normalization": {
-                  "Id": null,
-                  "Name": "hyd"
-              },
-              "synonms": {
-                  "Id": null,
-                  "Value": "Hyderabad"
-              },
-              "startPos": 31,
-              "endPos": 40
-          },
-          {
-              "entity": {
-                  "Id": null,
-                  "Name": "dest"
-              },
-              "normalization": {
-                  "Id": null,
-                  "Name": "dtx"
-              },
-              "synonms": {
-                  "Id": null,
-                  "Value": "Detroit"
-              },
-              "startPos": 44,
-              "endPos": 51
-          }
-      ],
-      "language": {
-          "Id": "31A18135-21D8-4BE8-8993-372F179E144C",
-          "Name": "English"
-      }
-  },
-  {
-      "text": "I want to book one ticket from Hyderabad to Chicago",
-      "entities": [
-          {
-              "entity": {
-                  "Id": null,
-                  "Name": "source"
-              },
-              "normalization": {
-                  "Id": null,
-                  "Name": "hyd"
-              },
-              "synonms": {
-                  "Id": null,
-                  "Value": "Hyderabad"
-              },
-              "startPos": 31,
-              "endPos": 40
-          },
-          {
-              "entity": {
-                  "Id": null,
-                  "Name": "dest"
-              },
-              "normalization": {
-                  "Id": null,
-                  "Name": "ch"
-              },
-              "synonms": {
-                  "Id": null,
-                  "Value": "Chicago"
-              },
-              "startPos": 44,
-              "endPos": 51
-          }
-      ],
-      "language": {
-          "Id": "31A18135-21D8-4BE8-8993-372F179E144C",
-          "Name": "English"
-      }
-  },
-  {
-      "text": "I want to book one ticket from Visakhapatnam to Detroit",
-      "entities": [
-          {
-              "entity": {
-                  "Id": null,
-                  "Name": "source"
-              },
-              "normalization": {
-                  "Id": null,
-                  "Name": "vskp"
-              },
-              "synonms": {
-                  "Id": null,
-                  "Value": "Visakhapatnam"
-              },
-              "startPos": 31,
-              "endPos": 44
-          },
-          {
-              "entity": {
-                  "Id": null,
-                  "Name": "dest"
-              },
-              "normalization": {
-                  "Id": null,
-                  "Name": "dtx"
-              },
-              "synonms": {
-                  "Id": null,
-                  "Value": "Detroit"
-              },
-              "startPos": 48,
-              "endPos": 55
-          }
-      ],
-      "language": {
-          "Id": "31A18135-21D8-4BE8-8993-372F179E144C",
-          "Name": "English"
-      }
-  },
-  {
-      "text": "I want to book one ticket from Visakhapatnam to Chicago",
-      "entities": [
-          {
-              "entity": {
-                  "Id": null,
-                  "Name": "source"
-              },
-              "normalization": {
-                  "Id": null,
-                  "Name": "vskp"
-              },
-              "synonms": {
-                  "Id": null,
-                  "Value": "Visakhapatnam"
-              },
-              "startPos": 31,
-              "endPos": 44
-          },
-          {
-              "entity": {
-                  "Id": null,
-                  "Name": "dest"
-              },
-              "normalization": {
-                  "Id": null,
-                  "Name": "ch"
-              },
-              "synonms": {
-                  "Id": null,
-                  "Value": "Chicago"
-              },
-              "startPos": 48,
-              "endPos": 55
-          }
-      ],
-      "language": {
-          "Id": "31A18135-21D8-4BE8-8993-372F179E144C",
-          "Name": "English"
-      }
+  const [sentences, setSentences] = useState([]);
+  const [selectedCheckboxes, setSelectedCheckboxes] = useState([]);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [sendvalues, setSendValues] = useState()
+  const [Sampleindex, setSample] = useState([]);
+  const sendprop = location.state
+  const myname = location.state && location.state.cards && location.state.cards.data.appname;
+  const desc = location.state && location.state.cards && location.state.cards.data.description;
+  const currentPath = window.location.pathname;
+  var sendingpaths = currentPath.split('/')
+  if (myname) {
   }
-]
+  useEffect(() => {
+    console.log(sendingpaths, 'hellopath')
+    sendingpaths[sendingpaths.length - 1] = myname
+    setSendValues(sendingpaths)
+    console.log(sendingpaths, "hellopath")
+  }, [])
+  useEffect(() => {
+    const storedIntents = localStorage.getItem("SampleFile");
+    if (storedIntents) {
+      setSample(JSON.parse(storedIntents));
+    }
+  }, []);
 
-
+  const handleIconClickBackField = () => {
+    navigate("/apps/:id");
+  };
+  const updateAndSaveSampleData = (data) => {
+    localStorage.setItem("SampleFile", JSON.stringify(data));
+    setSample(data);
+  };
+ 
   const options = {
     source: ['Hyderabad', 'Visakhapatnam'],
     dest: ['Detroit', 'Chicago'],
@@ -209,7 +241,13 @@ const Responsedata=[
       setSelectedSentences(sentences); // Select all sentences
     }
   };
-  
+
+  const getSelectedSentences = () => {
+    const selectedSentences = Responsedata.filter(item =>
+      selectedCheckboxes.includes(item.text)
+    );
+    return selectedSentences;
+  };
   // Function to generate sentences based on the entered example
   const generateChoices = () => {
     // Split the example by entities (<source/>, <dest/>)
@@ -238,24 +276,18 @@ const Responsedata=[
       setIsGenerated(false);
     }
   };
-
   // Function to handle the "Generate" button click for Utterance Generator
   const handleQuestionChange = (e) => {
     const value = e.target.value;
     console.log('Question input:', value); // Debugging: Check the input value
     setQuestion(value);
   };
-
- 
-
   const handleGenerateClick = () => {
     const regex = /^I want to book one ticket from\s+(.*?)\s+to\s+(.*?)$/i;
     const matches = question.match(regex);
-
     if (matches) {
       const source = matches[1].trim();
       const dest = matches[2].trim();
-
       const generatedSentences = [];
       options.source.forEach((sourceOption) => {
         options.dest.forEach((destOption) => {
@@ -263,7 +295,6 @@ const Responsedata=[
           generatedSentences.push(sentence);
         });
       });
-
       setSentences(generatedSentences);
       setIsGenerated(true);
     } else {
@@ -272,15 +303,19 @@ const Responsedata=[
       setIsGenerated(false);
     }
   };
-  const handleCheckboxChange = (sentence) => {
-    if (selectedSentences.includes(sentence)) {
-      setSelectedSentences((prevSelected) => prevSelected.filter((item) => item !== sentence));
+  const handleCheckboxChange = (checkboxValue) => {
+    let updatedSelectedCheckboxes = [...selectedCheckboxes];
+  
+    if (updatedSelectedCheckboxes.includes(checkboxValue)) {
+      updatedSelectedCheckboxes = updatedSelectedCheckboxes.filter(value => value !== checkboxValue);
     } else {
-      setSelectedSentences((prevSelected) => [...prevSelected, sentence]);
+      updatedSelectedCheckboxes = [...updatedSelectedCheckboxes, checkboxValue];
     }
+    setSelectedCheckboxes(updatedSelectedCheckboxes);
+    // Store updated selectedCheckboxes data in local storage
+    localStorage.setItem("selectedCheckboxes", JSON.stringify(updatedSelectedCheckboxes));
   };
   
-
   const customStyleMap = {
     smallFont: {
       fontSize: '12px',
@@ -301,28 +336,61 @@ const Responsedata=[
       setEditorState(EditorState.createEmpty());
     }
   };
-
   const onEditorStateChange = (editorState) => {
     setEditorState(editorState);
   };
-
   const handleInputChange = (e) => {
     setExample(e.target.value);
   };
 
+
+  const storeExamplesListInLocalStorage = (data) => {
+    localStorage.setItem("examplesList", JSON.stringify(data));
+  };
+  
+  useEffect(() => {
+    const storedIntents = localStorage.getItem("SampleFile");
+    const storedExamplesList = localStorage.getItem("examplesList");
+    const storedSelectedCheckboxes = localStorage.getItem("selectedCheckboxes");
+  
+    if (storedIntents) {
+      setSample(JSON.parse(storedIntents));
+    }
+    if (storedExamplesList) {
+      setExamplesList(JSON.parse(storedExamplesList));
+    }
+    if (storedSelectedCheckboxes) {
+      setSelectedCheckboxes(JSON.parse(storedSelectedCheckboxes));
+    }
+  }, []);
+  
   const handleAddExample = () => {
     if (example.trim() !== '') {
-      setExamplesList([...examplesList, example]);
+      const newExamplesList = [...examplesList, example];
+      setExamplesList(newExamplesList);
       setExample('');
+      storeExamplesListInLocalStorage(newExamplesList);
     }
   };
-
+  
+  const handleDeleteSelected = () => {
+    const updatedExamplesList = examplesList.filter((item, index) => !selectedSentences.includes(index));
+    setExamplesList(updatedExamplesList);
+  
+    const updatedSelectedSentences = selectedSentences.filter(index => index < examplesList.length);
+    setSelectedSentences(updatedSelectedSentences);
+  
+    // Clear selected checkboxes
+    setSelectedCheckboxes([]);
+  };
   const handleDeleteExample = (index) => {
     const updatedExamples = [...examplesList];
     updatedExamples.splice(index, 1);
     setExamplesList(updatedExamples);
+    storeExamplesListInLocalStorage(updatedExamples);
   };
-
+  
+  
   const handleEditExample = (index, newValue) => {
     const updatedExamples = [...examplesList];
     updatedExamples[index] = newValue;
@@ -331,7 +399,7 @@ const Responsedata=[
 
   const handleEditSampleIntents = (index) => {
     setEditingIndex(index);
-    setEditValue(examplesList[index]);
+    setEditValue(examplesList[index].text); // Set the initial value for editing
   };
   
   const handleUpdateSampleIntents = (index) => {
@@ -340,16 +408,22 @@ const Responsedata=[
       setEditingIndex(-1);
       setEditValue('');
     }
+
   };
 
   const handleDeleteEntity = (index) => {
-    handleDeleteExample(index);
-    if (editingIndex === index) {
-      setEditingIndex(-1);
-      setEditValue('');
-    }
+    const updatedExamplesList = examplesList.filter((_, i) => i !== index);
+    const updatedSelectedSentences = selectedSentences.filter((sentenceIndex) => sentenceIndex !== index);
+  
+    setExamplesList(updatedExamplesList);
+    setSelectedSentences(updatedSelectedSentences);
+    setEditingIndex(-1);
+    setEditValue('');
+  
+    storeExamplesListInLocalStorage(updatedExamplesList);
+    localStorage.setItem("selectedCheckboxes", JSON.stringify(updatedSelectedSentences));
   };
-
+  
   const handleMagicIconClick = () => {
     setIsModalVisible(true);
   };
@@ -378,9 +452,21 @@ const Responsedata=[
     { value: 'lo', label: 'London' },
   ];
 
+
+  const handleSelectSentence = (index) => {
+    const selectedSentencesCopy = [...selectedSentences];
+    if (selectedSentencesCopy.includes(index)) {
+      selectedSentencesCopy.splice(selectedSentencesCopy.indexOf(index), 1);
+    } else {
+      selectedSentencesCopy.push(index);
+    }
+    setSelectedSentences(selectedSentencesCopy);
+  };
+
+
   return (
     <div className="ant-layout-content-1">
-      <Breadcrumbs  />
+      <Breadcrumbs  values={sendingpaths}/>
       <div className="ant-card-body-1">
         <div className="ant-card-body-2">
           <div className='top1'>
@@ -389,6 +475,8 @@ const Responsedata=[
               className="iconStyle-mr-3"
               aria-hidden="true"
               style={{ color: "#2368a0", fontSize: "1.8rem", fontWeight: "700", marginTop: "-50px" }}
+              onClick={handleIconClickBackField}
+
             />
             <p
               style={{
@@ -404,61 +492,81 @@ const Responsedata=[
           </div>
           <p style={{ fontWeight: "bolder", fontSize: "1.2rem", marginTop: "-30px", marginLeft: "3px" }}>Utterances</p>
           <div className='top2'>
-          <Input
-            placeholder="Add Example"
-            type="text"
-            className="ant-input-1"
-            value={example}
-            onChange={handleInputChange}
-            suffix={example.trim() !== '' && <FontAwesomeIcon icon={faMagic} className="magic-icon" onClick={handleMagicIconClick} />}
-          />
-          <Button className='ant-btn' onClick={handleAddExample}>+ Add</Button>
-        </div>
-        <div className='ant-list'>
-        <List
+            <Input
+              placeholder="Add Example"
+              type="text"
+              className="ant-input-1"
+              value={example}
+              onChange={handleInputChange}
+              suffix={example.trim() !== '' && <FontAwesomeIcon icon={faMagic} className="magic-icon" onClick={handleMagicIconClick} />}
+            />
+            <Button className='ant-btn' onClick={handleAddExample}>+ Add</Button>
+          </div>
+          <div className='ant-list'>
+          <List
   size="small"
   bordered
-  dataSource={examplesList}
+  dataSource={[...examplesList, ...getSelectedSentences()]}
   renderItem={(item, index) => (
     <List.Item>
-      {editingIndex === index ? (
-        <Input
-          value={editValue} // Bind the value to the editValue state
-          autoFocus
-          onPressEnter={() => handleUpdateSampleIntents(index)} // Use handleUpdateSampleIntents when Enter is pressed
-          onBlur={() => handleUpdateSampleIntents(index)} // Use handleUpdateSampleIntents when focus is lost
-          onChange={(e) => setEditValue(e.target.value)} // Update editValue on every change
-        />
-      ) : (
-        <span>{item}</span>
-      )}
-      <div>
-        {editingIndex === index ? (
-          <FontAwesomeIcon
-            icon={faEdit}
-            style={{ color: 'green', fontSize: '15px', marginLeft: '8px', cursor: 'pointer' }}
-            onClick={() => handleUpdateSampleIntents(index)} 
-          />
-        ) : (
-          <FontAwesomeIcon
-            icon={faEdit}
-            style={{ color: '#00aae7', fontSize: '15px', marginLeft: '8px', cursor: 'pointer' }}
-            onClick={() => handleEditSampleIntents(index)} 
-          />
-        )}
-        <FontAwesomeIcon
-          icon={faTrash}
-          style={{ color: '#ef4048', cursor: 'pointer', marginLeft: '5px', fontSize: '15px' }}
-          onClick={() => handleDeleteEntity(index)}
-        />
-      </div>
-    </List.Item>
+            {editingIndex === index ? (
+              <Input
+                value={editValue}
+                autoFocus
+                onPressEnter={() => handleUpdateSampleIntents(index)}
+                onBlur={() => handleUpdateSampleIntents(index)}
+                onChange={(e) => setEditValue(e.target.value)}
+              />
+            ) : (
+              <span>
+                <input
+                  type='checkbox'
+                  onChange={() => handleSelectSentence(index)}
+                  checked={selectedSentences.includes(index)}
+                />
+                {typeof item === 'string' ? <span>{item}</span> : <span>{item.text}</span>}
+              </span>
+            )}
+            <div>
+              {editingIndex === index ? (
+                <FontAwesomeIcon
+                  icon={faEdit}
+                  style={{
+                    color: 'green',
+                    fontSize: '15px',
+                    marginLeft: '8px',
+                    cursor: 'pointer',
+                  }}
+                  onClick={() => handleUpdateSampleIntents(index)}
+                />
+              ) : (
+                <FontAwesomeIcon
+                  icon={faEdit}
+                  style={{
+                    color: '#00aae7',
+                    fontSize: '15px',
+                    marginLeft: '8px',
+                    cursor: 'pointer',
+                  }}
+                  onClick={() => handleEditSampleIntents(index)}
+                />
+              )}
+              <FontAwesomeIcon
+                icon={faTrash}
+                style={{
+                  color: '#ef4048',
+                  cursor: 'pointer',
+                  marginLeft: '5px',
+                  fontSize: '15px',
+                }}
+                onClick={() => handleDeleteEntity(index)}
+              />
+            </div>
+          </List.Item>
   )}
 />
+          </div>
         </div>
-      </div>
-
-
         <div className="ant-card-body-3">
           <p style={{ fontWeight: "bolder", fontSize: "1.2rem", }}>Response</p>
           <div className='rdw-editor-toolbar'>
@@ -506,10 +614,10 @@ const Responsedata=[
               <TabPane tab="Smart Recommendations" key="1">
                 <div style={{ marginBottom: '8px', display: 'flex', alignItems: 'center' }}>
                   <span style={{ marginRight: '18px', fontWeight: 'bold' }}>Example</span>
-                  <Input placeholder="Basic usage" style={{ width: '30%', marginRight: '18px',height:"30%",borderRadius:"unset" }} />
+                  <Input placeholder="Basic usage" style={{ width: '30%', marginRight: '18px', height: "30%", borderRadius: "unset" }} />
                   <span style={{ marginRight: '18px', fontWeight: 'bold' }}>Language</span>
                   <Select
-                    style={{ width: "25%", marginRight: '18px',color: "#bfbfbf",borderRadius:"unset" }}
+                    style={{ width: "25%", marginRight: '18px', color: "#bfbfbf", borderRadius: "unset" }}
                     onChange={handleChangeValue}
                     options={countryOptions}
                   />
@@ -517,14 +625,14 @@ const Responsedata=[
                     <Button
                       type="primary"
                       style={{
-                        marginRight:"18px",
+                        marginRight: "18px",
                         backgroundColor: '#2368a0',
                         color: '#fff',
                         borderRadius: '2px',
                         fontSize: '16px',
                         height: '40px',
                         padding: '6.4px 15px',
-                        marginLeft:"130px"
+                        marginLeft: "130px"
                       }}
                     >
                       Generate
@@ -533,109 +641,94 @@ const Responsedata=[
                 </div>
                 <p style={{ color: '#666' }}>Note: Please add a phrase and select a language to generate possible utterances.</p>
               </TabPane>
-              <TabPane tab="Utterance Generator" key="2">
-  <div style={{ marginBottom: '8px' }}>
-    <div style={{ display: 'flex', alignItems: 'center', marginBottom: '8px' }}>
-      <span style={{ marginRight: '18px', fontWeight: 'bold' }}>Example</span>
-      <Input
-        placeholder="Basic usage"
-        style={{ width: '30%', marginRight: '18px', borderRadius: 'unset' }}
-        value={question}
-        onChange={handleQuestionChange}
-      />
-      <span style={{ marginRight: '18px', fontWeight: 'bold' }}>Language</span>
-      <Select
-        style={{ width: '25%', marginRight: '18px', color: '#bfbfbf', borderRadius: 'unset' }}
-        onChange={handleChangeValue}
-        options={countryOptions}
-      />
-      <Button
-        type="primary"
-        style={{
-          backgroundColor: '#2368a0',
-          color: '#fff',
-          borderRadius: '2px',
-          fontSize: '16px',
-          height: '40px',
-          padding: '6.4px 15px',
-        }}
-        onClick={handleGenerateClick}
-      >
-        Generate
-      </Button>
-    </div>
-    {isGenerated && (
-      <div>
-        <label className="ant-checkbox-wrapper ml-0 mb-2">
-          <span className="ant-checkbox">
-            <input
-              type="checkbox"
-              className="ant-checkbox-input"
-              onChange={() => handleSelectAll()}
-              style={{marginBottom:"20px"}}
-            />
-          </span>
-          Select All
-        </label>
-        <div className="ant-list"  >
-          {Responsedata.map((item, index) => (
-            <div
-              key={index}
-              className="ant-list-item ml-0 d-flex align-items-center justify-content-between"
-              
-            >
-              <label className="ant-checkbox-wrapper mr-4">
-                <span className="ant-checkbox" >
-                  <input
-                    type="checkbox"
-                    className="ant-checkbox-input"
-                    value=""
-                    checked={selectedSentences.includes(item.text)}
-                    onChange={() => handleCheckboxChange(item.text)}
-                    
-                  />
-                </span>
-              </label>
-              <span>
-                <div style={{marginLeft: "25px", marginTop: "-25px", marginBottom: "15px"}}>
-                {item.text.substring(0, item.entities[0].startPos)}
-                <Tooltip title={(
-                  <div>
-                    <div><strong>Entity:</strong> {item.entities[0].entity.Name}</div>
-                    <div><strong>Normalization:</strong> {item.entities[0].normalization.Name}</div>
-                  </div>
-                )}>
-                  <span className="blue-text">{item.entities[0].synonms.Value}</span>
-                </Tooltip>
-                {item.text.substring(item.entities[0].endPos, item.entities[1].startPos)}
-                <Tooltip title={(
-                  <div>
-                    <div><strong>Entity:</strong> {item.entities[1].entity.Name}</div>
-                    <div><strong>Normalization:</strong> {item.entities[1].normalization.Name}</div>
-                  </div>
-                )}>
-                  <span className="blue-text">{item.entities[1].synonms.Value}</span>
-                </Tooltip>
-                {item.text.substring(item.entities[1].endPos)}
-              </div>
-              </span>
-            </div>
-          ))}
-        </div>
-      </div>
-    )}
-  </div>
-</TabPane>
+              {/* {-------------------------------------------------------------------------------------------------------------------------------------------------------------?} */}
 
-        </Tabs>
+              <TabPane tab="Utterance Generator" key="2">
+                <div>
+                  <div style={{ marginBottom: '8px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', marginBottom: '8px' }}>
+                      <span style={{ marginRight: '18px', fontWeight: 'bold' }}>Example</span>
+                      <Input
+                        placeholder="Basic usage"
+                        style={{ width: '30%', marginRight: '18px', borderRadius: 'unset' }}
+                        value={question}
+                        onChange={handleQuestionChange}
+                      />
+                      <span style={{ marginRight: '18px', fontWeight: 'bold' }}>Language</span>
+                      <Select
+                        style={{ width: '25%', marginRight: '18px', color: '#bfbfbf', borderRadius: 'unset' }}
+                        onChange={handleChangeValue}
+                        options={countryOptions}
+                      />
+                      <Button
+                        type="primary"
+                        style={{
+                          backgroundColor: '#2368a0',
+                          color: '#fff',
+                          borderRadius: '2px',
+                          fontSize: '16px',
+                          height: '40px',
+                          padding: '6.4px 15px',
+                        }}
+                        onClick={handleGenerateClick}
+                      >
+                        Generate
+                      </Button>
+                    </div>
+                    {isGenerated && (
+                      <div>
+                        <label className="ant-checkbox-wrapper ml-0 mb-2">
+                          <span className="ant-checkbox">
+                            <input
+                              type="checkbox"
+                              className="ant-checkbox-input"
+                              checked={selectedCheckboxes.length === sentences.length}
+                              onChange={handleSelectAll}
+                            />
+                          </span>
+                          Select All
+                        </label>
+                        {Responsedata.map((item, index) => (
+                          <div key={index} className="ant-list-item ml-0 d-flex align-items-center justify-content-between">
+                            <label className="ant-checkbox-wrapper mr-4">
+                              <span className="ant-checkbox">
+                                <input
+                                  type="checkbox"
+                                  className="ant-checkbox-input"
+                                  checked={selectedCheckboxes.includes(item.text)}
+                                  onChange={() => handleCheckboxChange(item.text)}
+                                />
+                              </span>
+                            </label>
+                            <span>
+                              <div style={{ marginLeft: "25px", marginTop: "-25px", marginBottom: "15px" }}>
+                                {item.text.substring(0, item.entities[0].startPos)}
+                                <Tooltip title={`Entity: ${item.entities[0].entity.Name}\nNormalization: ${item.entities[0].normalization.Name}`}>
+                                  <span className="blue-text">{item.entities[0].synonms.Value}</span>
+                                </Tooltip>
+                                {item.text.substring(item.entities[0].endPos, item.entities[1].startPos)}
+                                <Tooltip title={`Entity: ${item.entities[1].entity.Name}\nNormalization: ${item.entities[1].normalization.Name}`}>
+                                  <span className="blue-text">{item.entities[1].synonms.Value}</span>
+                                </Tooltip>
+                                {item.text.substring(item.entities[1].endPos)}
+                              </div>
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </TabPane>
+            </Tabs>
             <div style={{ textAlign: 'right' }}>
               <Button onClick={handleModalCancel} style={{
-                  width: '81.59px',
-                  background: 'white',
-                  color: '#6c757d',
-                  borderRadius: '2px',
-                  marginRight:"8px",
-                }} >
+                width: '81.59px',
+                background: 'white',
+                color: '#6c757d',
+                borderRadius: '2px',
+                marginRight: "8px",
+              }} >
                 Cancel
               </Button>
               <Button

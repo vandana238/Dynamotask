@@ -41,7 +41,7 @@ const IntentsFile = (props) => {
   }, [myname]);
 
   const handleIconClickBackField = () => {
-    // navigate.push("/apps/:id");
+    navigate("/apps/:id");
   };
 
   const handleAddEntity = () => {

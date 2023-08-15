@@ -1,24 +1,14 @@
 .ant-layout-content-1{
     
-    .ant-modal-content {
-       
-        width: 11000px;
-        border-radius: 8px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        height :200px
-      
-    }
     .ant-modal-body{
         width: 1100px;
     }
-
-
     .ant-card-body-1{
         // background-color: pink;
         width: 85vw;
         height: 65vh;
-        margin-left: 75px;
-        margin-top: 50px;
+        margin-left: 25px;
+        margin-top: -10px;
         border-radius: unset;
         display: flex;
         justify-content: space-evenly;
@@ -42,9 +32,7 @@
         flex-direction: row;
       }
       
-      .ant-btn-2 {
-        margin-top: 40px;
-      }
+    
       
       .card2 {
         flex: 1;
@@ -55,8 +43,7 @@
         overflow-y: hidden;
       }
       .rdw-editor-toolbar{
-        margin-top: 40px;
-       
+        margin-top: -10px;       
     
       }
     .top1{
@@ -96,9 +83,6 @@
   color: #fff !important;
 }
 
- 
-
- 
     }
     .ant-modal-content{
       width: 800px;
@@ -118,4 +102,7 @@
   }
   
 
-  
+   .ant-btn-2 {
+    margin-left:562px;
+    width: 300px;
+  }
