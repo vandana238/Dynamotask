@@ -119,7 +119,7 @@ const IntentsFile = (props) => {
               marginLeft: "30px",
             }}
           >
-            Vandhana - Intents
+            Hello - Intents
           </p>
         </div>
 

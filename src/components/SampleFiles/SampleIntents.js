@@ -426,6 +426,7 @@ const SampleIntents = (props) => {
   
   const handleMagicIconClick = () => {
     setIsModalVisible(true);
+    setExample('');
   };
 
   const handleModalCancel = () => {
@@ -503,70 +504,96 @@ const SampleIntents = (props) => {
             <Button className='ant-btn' onClick={handleAddExample}>+ Add</Button>
           </div>
           <div className='ant-list'>
-          <List
-  size="small"
-  bordered
-  dataSource={[...examplesList, ...getSelectedSentences()]}
-  renderItem={(item, index) => (
-    <List.Item>
-            {editingIndex === index ? (
-              <Input
-                value={editValue}
-                autoFocus
-                onPressEnter={() => handleUpdateSampleIntents(index)}
-                onBlur={() => handleUpdateSampleIntents(index)}
-                onChange={(e) => setEditValue(e.target.value)}
-              />
-            ) : (
-              <span>
-                <input
-                  type='checkbox'
-                  onChange={() => handleSelectSentence(index)}
-                  checked={selectedSentences.includes(index)}
-                />
-                {typeof item === 'string' ? <span>{item}</span> : <span>{item.text}</span>}
-              </span>
-            )}
-            <div>
-              {editingIndex === index ? (
-                <FontAwesomeIcon
-                  icon={faEdit}
-                  style={{
-                    color: 'green',
-                    fontSize: '15px',
-                    marginLeft: '8px',
-                    cursor: 'pointer',
-                  }}
-                  onClick={() => handleUpdateSampleIntents(index)}
-                />
-              ) : (
-                <FontAwesomeIcon
-                  icon={faEdit}
-                  style={{
-                    color: '#00aae7',
-                    fontSize: '15px',
-                    marginLeft: '8px',
-                    cursor: 'pointer',
-                  }}
-                  onClick={() => handleEditSampleIntents(index)}
-                />
-              )}
-              <FontAwesomeIcon
-                icon={faTrash}
-                style={{
-                  color: '#ef4048',
-                  cursor: 'pointer',
-                  marginLeft: '5px',
-                  fontSize: '15px',
-                }}
-                onClick={() => handleDeleteEntity(index)}
-              />
-            </div>
-          </List.Item>
-  )}
-/>
-          </div>
+  <List
+    size="small"
+    bordered
+    dataSource={[...examplesList, ...getSelectedSentences()]}
+    renderItem={(item, index) => (
+      <List.Item className="sample-list-item">
+        <div className="sample-checkbox">
+          {editingIndex === index ? (
+            <Input
+              value={editValue}
+              autoFocus
+              onPressEnter={() => handleUpdateSampleIntents(index)}
+              onBlur={() => handleUpdateSampleIntents(index)}
+              onChange={(e) => setEditValue(e.target.value)}
+            />
+          ) : (
+            <Input
+              type='checkbox'
+              onChange={() => handleSelectSentence(index)}
+              checked={selectedSentences.includes(index)}
+            />
+          )}
         </div>
+        <div className="sample-sentence">
+          {typeof item === 'string' ? (
+            item
+          ) : (
+            <span>
+              {item.text.split(" ").map((word, wordIndex) => {
+                const entity = item.entities.find(entity => entity.synonms.Value === word);
+                if (entity) {
+                  return (
+                    <Tooltip
+                      key={wordIndex}
+                      title={`Entity: ${entity.entity.Name}\nNormalization: ${entity.normalization.Name}`}
+                    >
+                      <span className="blue-text">{word}</span>
+                    </Tooltip>
+                  );
+                } else {
+                  return <span key={wordIndex}>{word} </span>;
+                }
+              })}
+            </span>
+          )}
+        </div>
+        <div className="sample-icons">
+          {editingIndex === index ? (
+            <FontAwesomeIcon
+              icon={faEdit}
+              style={{
+                color: 'green',
+                fontSize: '15px',
+                marginLeft: '8px',
+                cursor: 'pointer',
+              }}
+              onClick={() => handleUpdateSampleIntents(index)}
+            />
+          ) : (
+            <FontAwesomeIcon
+              icon={faEdit}
+              style={{
+                color: '#00aae7',
+                fontSize: '15px',
+                marginLeft: '8px',
+                cursor: 'pointer',
+              }}
+              onClick={() => {
+                setEditValue(item); // Set the current item's value when editing starts
+                handleEditSampleIntents(index);
+              }}
+            />
+          )}
+          <FontAwesomeIcon
+            icon={faTrash}
+            style={{
+              color: '#ef4048',
+              cursor: 'pointer',
+              marginLeft: '5px',
+              fontSize: '15px',
+            }}
+            onClick={() => handleDeleteEntity(index)}
+          />
+        </div>
+      </List.Item>
+    )}
+  />
+</div>
+
+</div>
         <div className="ant-card-body-3">
           <p style={{ fontWeight: "bolder", fontSize: "1.2rem", }}>Response</p>
           <div className='rdw-editor-toolbar'>
@@ -650,7 +677,7 @@ const SampleIntents = (props) => {
                       <span style={{ marginRight: '18px', fontWeight: 'bold' }}>Example</span>
                       <Input
                         placeholder="Basic usage"
-                        style={{ width: '30%', marginRight: '18px', borderRadius: 'unset' }}
+                        style={{ width: '40%', marginRight: '18px', borderRadius: 'unset' }}
                         value={question}
                         onChange={handleQuestionChange}
                       />
@@ -693,7 +720,7 @@ const SampleIntents = (props) => {
                             <label className="ant-checkbox-wrapper mr-4">
                               <span className="ant-checkbox">
                                 <input
-                                  type="checkbox"
+                                   type="checkbox"
                                   className="ant-checkbox-input"
                                   checked={selectedCheckboxes.includes(item.text)}
                                   onChange={() => handleCheckboxChange(item.text)}

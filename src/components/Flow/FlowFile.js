@@ -1,189 +1,178 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useCallback, useEffect, useState, useRef } from 'react';
 import ReactFlow, {
   MiniMap,
   Controls,
   Background,
-  useNodes,
-  useEdges,
+  useNodesState,
+  useEdgesState,
   addEdge,
 } from 'reactflow';
-
-import { Popover, Select } from 'antd';
-import ResizeObserver from 'resize-observer-polyfill';
+import 'reactflow/dist/style.css';
+import "./FlowFile.scss";
+import { DownOutlined, UserOutlined } from '@ant-design/icons';
+import { Button, Dropdown, Menu, message, Space } from 'antd';
 
 const initialNodeType = [
   { id: '1', position: { x: 500, y: 200 }, data: { label: 'NODE1' } },
   { id: '2', position: { x: 500, y: 350 }, data: { label: 'NODE2' } },
 ];
-const initialEdge = [{ id: 'e1-2', source: '1', target: '2', label: '+' }];
-
+const initialEdge = [{ id: 'e1-2', source: '1', target: '2', label: 'Addlabel' }];
 let id = 2;
 const getId = () => `${++id}`;
 
-const options = [
-  { value: 'herocard', label: 'herocard' },
-  { value: 'thumbnailcard', label: 'thumbnailcard' },
-  { value: 'adaptiveoutputcard', label: 'adaptiveoutputcard' }, 
-  { value: 'contactcard', label: 'contactcard' },
-  { value: 'videocard', label: 'videocard' },
-  { value: 'imagecard', label: 'imagecard' }
-];
-
 function FlowFile() {
-  const [Addnode, setAddnode] = useState(false);
-  const [AddChildeNode, setAddChildeNode] = useState(false);
+  const [addnode, setAddnode] = useState(false);
+  const [addChildeNode, setAddChildeNode] = useState(false);
   const [parentNode, setParentNode] = useState(null);
-  const [tempdata, settempdata] = useState("");
-  const [nodes, setNodes] = useNodes(initialNodeType);
-  const [edges, setEdges] = useEdges(initialEdge);
+  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodeType);
+  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdge);
   const [margin, setMargin] = useState(false);
-  
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [tempdata, setTempdata] = useState(null);
 
+  const onConnect = useCallback(() => setEdges((eds) => addEdge(eds)), [setEdges]);
   let nodeRef = useRef();
-
-  useEffect(() => {
-    const observer = new ResizeObserver(() => {
-      // Handle resize observer logic here
-    });
-
-    const flowContainer = document.querySelector('.react-flow');
-    if (flowContainer) {
-      observer.observe(flowContainer);
-    }
-
-    return () => {
-      if (flowContainer) {
-        observer.unobserve(flowContainer);
-      }
-    };
-  }, []);
-
-  useEffect(() => {
-    if (Addnode) {
-      const findFirstNode = nodes.find(item => item.id === initialEdge.target);
-      console.log("tempdata", tempdata)
-      console.log("nodes", nodes)
-      console.log("edges", edges)
-      setEdges((eds) => eds.concat({
-        id: String(parseInt(Math.random(100000000) * 1000000)),
-        source: tempdata.source,
-        target: nodes[nodes.length - 1].id,
-        label: '+',
-        labelBgPadding: [8, 4],
-        labelBgBorderRadius: 4,
-        labelBgStyle: { fill: '#CCCCCC', color: '#fff', fillOpacity: 0.7 },
-      }));
-      setEdges((eds) => eds.concat({
-        id: String(parseInt(Math.random(100000000) * 1000000)),
-        source: nodes[nodes.length - 1].id,
-        target: tempdata.target,
-        label: '+',
-        labelBgPadding: [8, 4],
-        labelBgBorderRadius: 4,
-        labelBgStyle: { fill: '#CCCCCC', color: '#fff', fillOpacity: 0.7 },
-      }));
-      var index = edges.findIndex(x => x.id === tempdata.id);
-      edges.splice(index, 1)
-      setAddnode(false);
-      setParentNode(null);
-    }
-    if (AddChildeNode) {
-      setEdges((eds) => eds.concat({
-        id: String(parseInt(Math.random(100000000) * 1000000)),
-        source: parentNode.id,
-        target: nodes[nodes.length - 1].id,
-        label: '+',                                                                                    
-        labelBgPadding: [8, 4],
-        labelBgBorderRadius: 4,
-        labelBgStyle: { fill: '#CCCCCC', color: '#fff', fillOpacity: 0.7 },
-      }));
-      setAddChildeNode(false);
-      setParentNode(null);
-    }
-  }, [nodes, edges, Addnode, AddChildeNode]);
+  const dropdownRef = useRef();
 
   const handleEdgeClick = (e, data) => {
-    settempdata(data);
-    const findSourceNode = nodes.find((item) => item.id === data.source);
-    setNodes((prevNodes) =>
-      prevNodes.concat({
-        id: getId(),
-        position: { x: findSourceNode.position.x, y: findSourceNode.position.y + 70 },
-        data: { label: `Node ${id}`, parentId: data.target, ...initialNodeType.data },
-      })
-    );
-    setParentNode(findSourceNode);
-    setAddnode(true);
+    if (data.label === 'Addlabel') {
+      setTempdata(data);
+      setShowDropdown(true);
+    }
   };
 
-  const handleNodeClick = (e, data) => {
-    setMargin(data);
-    setAddChildeNode(true);
-    setParentNode(data);
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (showDropdown && dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setShowDropdown(false);
+      }
+    };
+
+    document.addEventListener('click', handleClickOutside);
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, [showDropdown]);
+
+  const handleDropdownMenuClick = (e) => {
+    message.info(`Clicked on menu item: ${e.key}`);
+    
+    // Get the selected option's key
+    const selectedKey = e.key;
+
+    // Determine the label based on the selected key
+    let newNodeLabel = '';
+    if (selectedKey === '1') {
+      newNodeLabel = 'Herocard';
+    } else if (selectedKey === '2') {
+      newNodeLabel = 'Thumbnailcard';
+    } else if (selectedKey === '3') {
+      newNodeLabel = 'Adaptiveoutputcard';
+    } else if (selectedKey === '4') {
+      newNodeLabel = 'Contactcard';
+    }
+
+    // Call the function to create a new node with the determined label
+    createNewNode(newNodeLabel);
+
+    setShowDropdown(false); // Close the dropdown after clicking an option
   };
 
-  const handlePlusMouseEnter = () => {
-    // Handle mouse enter logic
+  const createNewNode = (label) => {
+    const newNodeId = getId();
+    const newNode = {
+      id: newNodeId,
+      position: { x: 0, y: 0 }, // Set the desired position
+      data: { label: label }, // Use the determined label here
+    };
+
+    setNodes((prevNodes) => [...prevNodes, newNode]);
+
+    if (tempdata) {
+      setEdges((prevEdges) => [
+        ...prevEdges,
+        {
+          id: `e-${tempdata.source}-${newNodeId}`,
+          source: tempdata.source,
+          target: newNodeId,
+          label: 'New Edge',
+        },
+      ]);
+    }
   };
 
-  const handlePlusMouseLeave = () => {
-    // Handle mouse leave logic
+  const handleMenuClick = (e) => {
+    message.info('Click on menu item.');
+    console.log('click', e);
+    handleEdgeClick();
+  };
+  const items = [
+    {
+      label: 'herocard',
+      key: '1',
+      icon: <UserOutlined />,
+
+    },
+    {
+      label: 'thumbnailcard',
+      key: '2',
+      icon: <UserOutlined />,
+    },
+    {
+      label: 'adaptiveoutputcard',
+      key: '3',
+      icon: <UserOutlined />,
+      danger: true,
+    },
+    {
+      label: 'contactcard',
+      key: '4',
+      icon: <UserOutlined />,
+      danger: true,
+      disabled: true,
+    },
+  ];
+  const menuProps = {
+    items,
+    onClick: handleMenuClick,
   };
 
   return (
-    <div style={{ width: '100%', height: '100vh' }}>
+    <div style={{ width: '100%', height: '100vh' }} className='reactflow-1'>
       <ReactFlow
-        elements={[...nodes, ...edges]}
-        onElementsRemove={() => {}}
-        onConnect={handleEdgeClick}
-        onLoad={() => {}}
-        onDrop={() => {}}
-        onDragOver={() => {}}
-        onEdgeContextMenu={() => {}}
-        onElementClick={(event, element) => {
-          if (element.type === 'input' || element.type === 'output') {
-            settempdata(element);
-            setAddnode(true);
-          } else if (element.type === 'default') {
-            setMargin(element);
-            setAddChildeNode(true);
-            setParentNode(element);
-          }
-        }}
-        onNodeDragStop={(event, node) => {
-          setNodes((prevNodes) =>
-            prevNodes.map((n) => (n.id === node.id ? { ...n, position: node.position } : n))
-          );
-        }}
+        nodes={nodes}
+        edges={edges}
+        onNodesChange={onNodesChange}
+        onEdgesChange={onEdgesChange}
+        onConnect={onConnect}
+        onEdgeClick={handleEdgeClick}
       >
         <MiniMap />
         <Controls />
-        <Background variant="cross" />
+        <Background />
       </ReactFlow>
-      <div className="vl"></div>
-      {Addnode && (
-        <Popover
-          content={
-            <Select
-              defaultValue={options[0].value}
-              style={{ width: 120 }}
-              onChange={(value) => {
-                console.log(`selected ${value}`);
-              }}
-              options={options}
-            />
+     <div className='ant-dropdown'>
+     {showDropdown && (
+        <Dropdown
+          overlay={
+            <Menu onClick={handleDropdownMenuClick}>
+              {menuProps.items.map(item => (
+                <Menu.Item key={item.key}>
+                  {item.icon}
+                  {item.label}
+                </Menu.Item>
+              ))}
+            </Menu>
           }
-          trigger="hover"
+          trigger={['click']}
+          visible={showDropdown}
+          onVisibleChange={setShowDropdown}
         >
-          <span
-            style={{ cursor: 'pointer' }}
-            onMouseEnter={handlePlusMouseEnter}
-            onMouseLeave={handlePlusMouseLeave}
-          >
-            +
-          </span>
-        </Popover>
+          <Button>Addlabel</Button>
+        </Dropdown>
       )}
+
+     </div>
     </div>
   );
 }
